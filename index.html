@@ -1,0 +1,53 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Notas Laboratorio de Máquinas Eléctricas I</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Registro de Notas Laboratorio de Máquinas Eléctricas I</h1>
+    <label for="codigo">Ingrese el código del estudiante:</label>
+    <input type="text" id="codigo" placeholder="Ejemplo: 20190398">
+    <button onclick="mostrarNotas()">Mostrar Notas</button>
+
+    <table id="tabla-notas" style="display: none;">
+        <thead>
+            <tr>
+                <th>CODIGO</th>
+                <th>T1</th>
+                <th>T2</th>
+                <th>T3</th>
+                <th>T4</th>
+                <th>TE</th>
+                <th>P</th>
+                <th>EMC</th>
+                <th>EF</th>
+                <th>EA</th>
+                <th>PF</th>
+            </tr>
+        </thead>
+        <tbody id="tabla-cuerpo">
+        </tbody>
+    </table>
+
+    <div class="legend">
+        <strong>Significado de las cabeceras:</strong>
+        <ul>
+            <li><strong>T1:</strong> Trabajo encargado 1 - Investigue la comparativa de costos entre un sistema de tensión de 110V vs 220V</li>
+            <li><strong>T2:</strong> Trabajo encargado 2 - Informe técnico de la instalación de un transformador de distribución</li>
+            <li><strong>T3:</strong> Trabajo encargado 3 - Informe 1: Descripción y propuesta de la máquina eléctrica a construir</li>
+            <li><strong>T4:</strong> Trabajo encargado 4 - Informe 2: diseño 3D y sistema eléctrico de la máquina a construir</li>
+            <li><strong>TE:</strong> Promedio Trabajo encargado (15%) - Promedio de T1, T2, T3, T4</li>
+            <li><strong>P:</strong> Práctica calificada (20%) - Primera presentación del prototipo</li>
+            <li><strong>EMC:</strong> Examen medio curso (20%) - Control de lectura Máquinas síncronas</li>
+            <li><strong>EF:</strong> Examen final (40%) - Presentación final del prototipo con manual de usuario</li>
+            <li><strong>EA:</strong> Examen Actitudinal (5%) - Participación en clases</li>
+            <li><strong>PF:</strong> Promedio final</li>
+        </ul>
+    </div>
+
+    <script src="scripts.js"></script>
+</body>
+</html>

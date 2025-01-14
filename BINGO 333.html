@@ -1,0 +1,284 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generador de Números Aleatorios</title>
+  <link rel="manifest" href="manifest.json">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: black;
+      color: white;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      padding: 20px;
+    }
+
+    .inputs {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+
+    .input-group {
+      text-align: center;
+    }
+
+    .input-group label {
+      display: block;
+      font-style: italic;
+      color: gray;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    .input-group input {
+      width: 50px;
+      padding: 6px;
+      border-radius: 5px;
+      border: 2px solid white;
+      background-color: black;
+      color: white;
+      text-align: center;
+      outline: none;
+      font-weight: bold;  /* Negrita en las cajas de texto */
+      font-size: 1.1rem;   /* Aumentar tamaño de la fuente */
+    }
+
+ input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none; /* Oculta los spinners en navegadores WebKit */
+    margin: 0; /* Asegura que no queden espacios adicionales */
+  } 
+
+
+    .btn {
+      margin: 10px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      background-color: blue;
+      color: white;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background-color: darkblue;
+    }
+
+    .esfera {
+      width: 150px;
+      height: 150px;
+      margin: 20px auto;
+      background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.4) 10%, rgba(255, 255, 255, 0) 50%), 
+                  rgba(255, 0, 0, 1); /* Rojo puro como color base */
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: inset -5px -5px 15px rgba(0, 0, 0, 0.5), 0px 10px 25px rgba(0, 0, 0, 0.6);
+    }
+
+.esfera p {
+  font-size: 6rem; /* Tamaño del número */
+  font-weight: bold; /* Negrita */
+  color: white; /* Color del texto */
+  text-shadow: 
+    -2px -2px 2px gray, /* Sombra hacia la esquina superior izquierda */
+    2px -2px 2px gray,  /* Sombra hacia la esquina superior derecha */
+    -2px 2px 2px gray,  /* Sombra hacia la esquina inferior izquierda */
+    2px 2px 2px gray;   /* Sombra hacia la esquina inferior derecha */
+}
+
+
+    .historial-container {
+      max-width: 230px;
+      height: 70px;
+      overflow-x: scroll; /* Habilita el desplazamiento horizontal */
+      display: flex;
+      gap: 10px;
+      border: 1px solid transparent; /* Bordes transparentes */
+      padding: 5px;
+      border-radius: 5px;
+      background-color: black;
+      margin: 20px auto;
+      scroll-behavior: smooth; /* Transición suave al desplazarse */
+    }
+
+    .historial-container::-webkit-scrollbar {
+      height: 8px;
+    }
+
+    .historial-container::-webkit-scrollbar-thumb {
+      background-color: gray;
+      border-radius: 5px;
+    }
+
+    .numero-historial {
+      width: 40px; /* Ancho fijo */
+      height: 20px; /* Altura fija */
+      padding: 5px;
+      border-radius: 5px;
+      border: 2px solid white; /* Borde grueso */
+      background-color: black;
+      color: white;
+      text-align: center;
+      line-height: 20px; /* Alineación vertical del texto */
+      flex-shrink: 0; /* Evita que las cajas se reduzcan */
+      font-weight: bold;
+    }
+
+    .historial-container:active {
+      cursor: grabbing;
+    }
+
+    .mensaje {
+      margin-top: 10px;
+      font-style: italic;
+      color: gray;
+    }
+
+    .checkbox-container {
+      margin-top: 20px;
+      color: gray;
+    }
+
+    .checkbox-container input {
+      margin-right: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="inputs">
+      <div class="input-group">
+        <label for="desde">Desde</label>
+        <input id="desde" type="number" placeholder="0" value="1">
+      </div>
+      <div class="input-group">
+        <label for="hasta">Hasta</label>
+        <input id="hasta" type="number" placeholder="100" value="24">
+      </div>
+      <div class="input-group">
+        <label for="repetir">Repetir</label>
+        <input id="repetir" type="number" placeholder="1" value="1">
+      </div>
+    </div>
+
+    <div id="esfera" class="esfera">
+      <p id="numero-actual">0</p>
+    </div>
+    <div id="historial-container" class="historial-container"></div>
+    <p id="mensaje" class="mensaje"></p> <!-- Mensaje en la interfaz -->
+
+    <div class="checkbox-container">
+      <input type="checkbox" id="leerEnVozAlta"> <label for="leerEnVozAlta">Leer el número en voz alta</label>
+    </div>
+
+    <!-- Mover el botón reiniciar al final -->
+    <button id="reiniciar" class="btn">Reiniciar</button>
+  </div>
+  <script>
+    const esfera = document.getElementById('esfera');
+    const numeroActual = document.getElementById('numero-actual');
+    const historialContainer = document.getElementById('historial-container');
+    const reiniciarBtn = document.getElementById('reiniciar');
+    const mensaje = document.getElementById('mensaje');
+    const leerEnVozAltaCheckbox = document.getElementById('leerEnVozAlta'); // Nuevo checkbox
+
+    let intervalo;
+    let numerosDisponibles = []; // Lista de números disponibles para generar
+    let historial = []; // Historial de números generados
+    let animacionEnCurso = false; // Controla si hay una animación activa
+
+    // Función para leer en voz alta el número
+    function leerNumero(numero) {
+      if (leerEnVozAltaCheckbox.checked) {
+        const utterance = new SpeechSynthesisUtterance(numero);
+        speechSynthesis.speak(utterance);
+      }
+    }
+
+    // Reiniciar la aplicación y configurar números disponibles
+    function reiniciarApp() {
+      clearInterval(intervalo);
+      numeroActual.textContent = '0';
+      historialContainer.innerHTML = '';
+      historial = [];
+      mensaje.textContent = ''; // Limpiar mensaje
+
+      const desde = parseInt(document.getElementById('desde').value);
+      const hasta = parseInt(document.getElementById('hasta').value);
+      const repetir = parseInt(document.getElementById('repetir').value || 1);
+
+      if (isNaN(desde) || isNaN(hasta) || desde >= hasta || isNaN(repetir) || repetir <= 0) {
+        mensaje.textContent = 'Por favor, ingresa un rango y valores válidos.';
+        return;
+      }
+
+      numerosDisponibles = [];
+      for (let i = desde; i <= hasta; i++) {
+        for (let j = 0; j < repetir; j++) {
+          numerosDisponibles.push(i);
+        }
+      }
+
+      mensaje.textContent = '¡Configuración completada! Ahora puedes generar números.';
+    }
+
+    // Iniciar la animación
+    function iniciarAnimacion() {
+      if (animacionEnCurso) return; // No hacer nada si ya hay una animación en curso
+
+      if (numerosDisponibles.length === 0) {
+        mensaje.textContent = 'Todos los números posibles ya se han generado o no se ha configurado el rango.';
+        return;
+      }
+
+      animacionEnCurso = true; // Marcar que la animación está en curso
+
+      let contador = 0;
+      let numeroFinal;
+
+      intervalo = setInterval(() => {
+        const randomIndex = Math.floor(Math.random() * numerosDisponibles.length);
+        numeroFinal = numerosDisponibles[randomIndex];
+        numeroActual.textContent = numeroFinal;
+        contador++;
+
+        if (contador > 20) {
+          clearInterval(intervalo);
+          numerosDisponibles.splice(randomIndex, 1); // Eliminar el número generado
+          agregarAlHistorial(numeroFinal);
+          animacionEnCurso = false; // Marcar que la animación ha terminado
+          leerNumero(numeroFinal); // Leer el número final si el checkbox está marcado
+        }
+      }, 50); // Cambiar número cada 50ms
+    }
+
+    // Agregar número al historial
+    function agregarAlHistorial(numero) {
+      historial.push(numero);
+      const cajaNumero = document.createElement('div');
+      cajaNumero.className = 'numero-historial';
+      cajaNumero.textContent = numero;
+
+      historialContainer.appendChild(cajaNumero);
+      // Desplazarse automáticamente hacia los números recientes
+      historialContainer.scrollLeft = historialContainer.scrollWidth;
+    }
+
+    // Eventos
+    esfera.addEventListener('click', iniciarAnimacion);
+    reiniciarBtn.addEventListener('click', reiniciarApp);
+  </script>
+</body>
+</html>
